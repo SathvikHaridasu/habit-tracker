@@ -5,14 +5,27 @@ interface HabitListProps {
   habits: Habit[];
   onToggleComplete: (habitId: string) => void;
   onDelete: (habitId: string) => void;
+  onToggleDayComplete?: (habitId: string, date: string) => void;
 }
 
 function getToday() {
   return new Date().toISOString().slice(0, 10);
 }
 
-export const HabitList: React.FC<HabitListProps> = ({ habits, onToggleComplete, onDelete }) => {
+function getLastNDates(n: number) {
+  const dates: string[] = [];
+  const today = new Date();
+  for (let i = n - 1; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    dates.push(d.toISOString().slice(0, 10));
+  }
+  return dates;
+}
+
+export const HabitList: React.FC<HabitListProps> = ({ habits, onToggleComplete, onDelete, onToggleDayComplete }) => {
   const today = getToday();
+  const last7 = getLastNDates(7);
   return (
     <div className="space-y-4">
       {habits.length === 0 && <p className="text-center text-gray-400">No habits yet. Add one above!</p>}
@@ -29,6 +42,20 @@ export const HabitList: React.FC<HabitListProps> = ({ habits, onToggleComplete, 
               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">
                 🏆 {habit.longestStreak} <span className="ml-1">Longest</span>
               </span>
+            </div>
+            <div className="flex gap-1 mt-2">
+              {last7.map(date => (
+                <button
+                  key={date}
+                  className={`w-7 h-7 rounded-full border flex items-center justify-center text-xs font-bold transition-colors
+                    ${habit.completions[date] ? 'bg-green-400 border-green-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-400 hover:bg-blue-100 hover:border-blue-400'}`}
+                  onClick={() => onToggleDayComplete && onToggleDayComplete(habit.id, date)}
+                  aria-label={habit.completions[date] ? `Unmark ${date}` : `Mark ${date}`}
+                  title={date === today ? 'Today' : date}
+                >
+                  {date === today ? 'T' : new Date(date).getDate()}
+                </button>
+              ))}
             </div>
           </div>
           <button
