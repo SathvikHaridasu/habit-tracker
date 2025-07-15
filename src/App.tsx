@@ -1,6 +1,7 @@
 import React from 'react';
 import { useHabits } from './hooks/useHabits';
 import { HabitList } from './components/HabitList';
+import { HabitForm } from './components/HabitForm';
 import { Habit } from './types';
 
 function getToday() {
@@ -32,12 +33,27 @@ function App() {
     ));
   };
 
+  const handleAddHabit = (name: string, description: string) => {
+    if (habits.length >= 20) return;
+    const newHabit: Habit = {
+      id: crypto.randomUUID(),
+      name,
+      description,
+      createdAt: new Date().toISOString(),
+      completions: {},
+      currentStreak: 0,
+      longestStreak: 0,
+    };
+    setHabits(habits => [newHabit, ...habits]);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
       <header className="p-4 border-b border-gray-200 mb-4">
         <h1 className="text-2xl font-bold text-center">Habit Tracker</h1>
       </header>
       <main className="max-w-xl mx-auto p-4">
+        <HabitForm onAdd={handleAddHabit} disabled={habits.length >= 20} />
         <HabitList habits={habits} onToggleComplete={handleToggleComplete} />
       </main>
     </div>
