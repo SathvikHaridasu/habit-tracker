@@ -1,8 +1,45 @@
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  color: #22223b;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 #root {
-  max-width: 1280px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-container {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 24px rgba(60, 60, 120, 0.10);
+  padding: 2rem 1.25rem 1.5rem 1.25rem;
+  max-width: 400px;
+  width: 100%;
   margin: 0 auto;
-  padding: 2rem;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin-bottom: 1.2rem;
   text-align: center;
+  color: #3b5bdb;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #495057;
 }
 
 .logo {
@@ -39,4 +76,55 @@
 
 .read-the-docs {
   color: #888;
+}
+
+input[type="text"] {
+  background: #fff !important;
+  color: #22223b;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  box-shadow: none;
+}
+
+input[type="text"]::placeholder {
+  color: #b0b4c1;
+  opacity: 1;
+}
+
+button[type="submit"], .habit-card button {
+  background: #3b5bdb;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button[type="submit"]:hover, .habit-card button:hover {
+  background: #274bb6;
+}
+
+@media (max-width: 600px) {
+  .app-container {
+    padding: 1rem 0.5rem 1.5rem 0.5rem;
+    max-width: 98vw;
+  }
+  h1 {
+    font-size: 1.4rem;
+  }
+}
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadein {
+  animation: fadein 0.5s;
 }

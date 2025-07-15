@@ -18,9 +18,9 @@ export const HabitForm: React.FC<HabitFormProps> = ({ onAdd, disabled }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-2 mb-6">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3 mb-6 bg-white rounded-xl shadow-sm p-4 animate-fadein">
       <input
-        className="border rounded px-3 py-2"
+        className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200 transition mb-1"
         type="text"
         placeholder="Habit name"
         value={name}
@@ -30,7 +30,7 @@ export const HabitForm: React.FC<HabitFormProps> = ({ onAdd, disabled }) => {
         disabled={disabled}
       />
       <input
-        className="border rounded px-3 py-2"
+        className="border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-100 transition mb-1"
         type="text"
         placeholder="Description (optional)"
         value={description}
@@ -39,7 +39,7 @@ export const HabitForm: React.FC<HabitFormProps> = ({ onAdd, disabled }) => {
         disabled={disabled}
       />
       <button
-        className="bg-blue-500 text-white rounded px-4 py-2 mt-2 disabled:opacity-50"
+        className="bg-blue-500 hover:bg-blue-600 text-white rounded-lg px-4 py-2 mt-2 font-semibold shadow transition disabled:opacity-50 disabled:cursor-not-allowed"
         type="submit"
         disabled={disabled || !name.trim()}
       >

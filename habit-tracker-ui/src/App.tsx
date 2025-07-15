@@ -63,9 +63,10 @@ function App() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6 text-center">Habit Tracker</h1>
+    <div className="app-container">
+      <h1>Habit Tracker</h1>
       <HabitForm onAdd={handleAddHabit} disabled={habits.length >= 20} />
+      <div className="section-title">Your Habits</div>
       <HabitList habits={habits} onToggleComplete={handleToggleComplete} onDelete={handleDeleteHabit} />
     </div>
   );
