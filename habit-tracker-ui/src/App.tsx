@@ -1,35 +1,74 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import './App.css';
+import { HabitForm } from '../../src/components/HabitForm';
+import { HabitList } from '../../src/components/HabitList';
+import { useHabits } from '../../src/hooks/useHabits';
+import type { Habit } from '../../src/types';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+function getToday() {
+  return new Date().toISOString().slice(0, 10);
 }
 
-export default App
+function App() {
+  const [habits, setHabits] = useHabits();
+
+  const handleAddHabit = (name: string, description: string) => {
+    if (habits.length >= 20) return;
+    const newHabit: Habit = {
+      id: crypto.randomUUID(),
+      name,
+      description,
+      createdAt: new Date().toISOString(),
+      completions: {},
+      currentStreak: 0,
+      longestStreak: 0,
+    };
+    setHabits([newHabit, ...habits]);
+  };
+
+  const handleToggleComplete = (habitId: string) => {
+    const today = getToday();
+    setHabits(habits => habits.map(habit => {
+      if (habit.id !== habitId) return habit;
+      const completions = { ...habit.completions };
+      if (completions[today]) {
+        delete completions[today];
+      } else {
+        completions[today] = true;
+      }
+      // Recalculate streaks
+      let currentStreak = 0;
+      let longestStreak = 0;
+      // Get all completion dates sorted descending
+      const dates = Object.keys(completions).sort((a, b) => b.localeCompare(a));
+      let streak = 0;
+      let prev = today;
+      for (const date of dates) {
+        if (date === prev) {
+          streak++;
+          prev = new Date(new Date(date).getTime() - 86400000).toISOString().slice(0, 10);
+        } else {
+          streak = 1;
+          prev = new Date(new Date(date).getTime() - 86400000).toISOString().slice(0, 10);
+        }
+        if (streak > longestStreak) longestStreak = streak;
+      }
+      currentStreak = streak;
+      return { ...habit, completions, currentStreak, longestStreak };
+    }));
+  };
+
+  const handleDeleteHabit = (habitId: string) => {
+    setHabits(habits => habits.filter(h => h.id !== habitId));
+  };
+
+  return (
+    <div className="max-w-xl mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-6 text-center">Habit Tracker</h1>
+      <HabitForm onAdd={handleAddHabit} disabled={habits.length >= 20} />
+      <HabitList habits={habits} onToggleComplete={handleToggleComplete} onDelete={handleDeleteHabit} />
+    </div>
+  );
+}
+
+export default App;
