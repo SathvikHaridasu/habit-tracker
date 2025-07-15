@@ -22,7 +22,14 @@ export const HabitList: React.FC<HabitListProps> = ({ habits, onToggleComplete, 
             <div className="font-semibold text-lg text-blue-900">{habit.name}</div>
             {habit.description && <div className="text-xs text-gray-600 mb-1 truncate">{habit.description}</div>}
             <div className="text-xs text-gray-400 mb-1">Created: {new Date(habit.createdAt).toLocaleDateString()}</div>
-            <div className="text-xs text-gray-500">Streak: <span className="font-bold text-green-600">{habit.currentStreak}</span> | Longest: {habit.longestStreak}</div>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-700 mr-1">
+                🔥 {habit.currentStreak} <span className="ml-1">Current</span>
+              </span>
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">
+                🏆 {habit.longestStreak} <span className="ml-1">Longest</span>
+              </span>
+            </div>
           </div>
           <button
             className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-colors mx-2 text-lg font-bold ${habit.completions[today] ? 'bg-green-400 border-green-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-500 hover:bg-blue-100 hover:border-blue-400'}`}
