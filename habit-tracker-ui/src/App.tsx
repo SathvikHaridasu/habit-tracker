@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import './App.css';
 import { HabitForm } from '../../src/components/HabitForm';
 import { HabitList } from '../../src/components/HabitList';
@@ -13,6 +13,39 @@ function App() {
   const [habits, setHabits] = useHabits();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [loading, setLoading] = useState(true);
+  const [showIntro, setShowIntro] = useState(() => {
+    return localStorage.getItem('habitTrackerIntroDismissed') !== 'true';
+  });
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleDismissIntro = () => {
+    setShowIntro(false);
+    localStorage.setItem('habitTrackerIntroDismissed', 'true');
+  };
+
+  if (loading) {
+    return (
+      <div className="loading-screen">
+        <div className="spinner"></div>
+        <div className="loading-title">Habit Tracker</div>
+      </div>
+    );
+  }
+
+  if (showIntro) {
+    return (
+      <div className="intro-screen">
+        <h1>Welcome to Habit Tracker!</h1>
+        <p>Track your daily habits, build streaks, and reach your goals with ease. Add habits, mark completions, and see your progress over time.</p>
+        <button className="intro-btn" onClick={handleDismissIntro}>Get Started</button>
+      </div>
+    );
+  }
 
   // Calculate statistics
   const stats = useMemo(() => {

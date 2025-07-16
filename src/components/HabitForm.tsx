@@ -58,7 +58,7 @@ export const HabitForm: React.FC<HabitFormProps> = ({ onAdd, disabled }) => {
       
       <div className="grid grid-cols-2 gap-2">
         <select
-          className="border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-100 transition"
+          className="custom-select"
           value={category}
           onChange={e => setCategory(e.target.value)}
           disabled={disabled}
@@ -70,7 +70,7 @@ export const HabitForm: React.FC<HabitFormProps> = ({ onAdd, disabled }) => {
         </select>
         
         <select
-          className="border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-100 transition"
+          className="custom-select"
           value={goal}
           onChange={e => setGoal(Number(e.target.value))}
           disabled={disabled}
@@ -82,16 +82,12 @@ export const HabitForm: React.FC<HabitFormProps> = ({ onAdd, disabled }) => {
         </select>
       </div>
 
-      <div className="flex gap-2">
+      <div className="priority-group">
         {(['low', 'medium', 'high'] as const).map(p => (
           <button
             key={p}
             type="button"
-            className={`flex-1 py-2 px-3 rounded-lg border transition ${
-              priority === p 
-                ? 'bg-blue-500 text-white border-blue-500' 
-                : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200'
-            }`}
+            className={`priority-btn${priority === p ? ' selected' : ''}`}
             onClick={() => setPriority(p)}
             disabled={disabled}
           >

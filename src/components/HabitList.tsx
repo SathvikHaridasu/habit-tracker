@@ -30,7 +30,7 @@ export const HabitList: React.FC<HabitListProps> = ({ habits, onToggleComplete, 
     <div className="space-y-4">
       {habits.length === 0 && <p className="text-center text-gray-400">No habits yet. Add one above!</p>}
       {habits.map(habit => (
-        <div key={habit.id} className="flex items-center justify-between bg-white rounded-2xl shadow-md p-4 mb-1 habit-card transition-all duration-300 hover:shadow-lg animate-fadein">
+        <div key={habit.id} className={"flex items-center justify-between bg-white rounded-2xl shadow-md p-4 mb-1 habit-card transition-all duration-300 hover:shadow-lg animate-fadein"}>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <div className="font-semibold text-lg text-blue-900">{habit.name}</div>
