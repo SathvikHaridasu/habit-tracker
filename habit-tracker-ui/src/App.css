@@ -20,10 +20,11 @@ body {
   background: #fff;
   border-radius: 1rem;
   box-shadow: 0 4px 24px rgba(60, 60, 120, 0.10);
-  padding: 2rem 1.25rem 1.5rem 1.25rem;
-  max-width: 400px;
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  max-width: 800px;
   width: 100%;
   margin: 0 auto;
+  min-height: 80vh;
 }
 
 h1 {
@@ -40,6 +41,45 @@ h1 {
   font-weight: 600;
   margin-bottom: 0.5rem;
   color: #495057;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .logo {
