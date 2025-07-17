@@ -26,76 +26,104 @@ function getLastNDates(n: number) {
 export const HabitList: React.FC<HabitListProps> = ({ habits, onToggleComplete, onDelete, onToggleDayComplete }) => {
   const today = getToday();
   const last7 = getLastNDates(7);
+
+  if (habits.length === 0) {
+    return (
+      <div className="empty-state">
+        <div className="empty-icon">📝</div>
+        <h3>No habits yet!</h3>
+        <p>Add your first habit above to start tracking your progress.</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-4">
-      {habits.length === 0 && <p className="text-center text-gray-400">No habits yet. Add one above!</p>}
+    <div className="habits-list">
       {habits.map(habit => (
-        <div key={habit.id} className={"flex items-center justify-between bg-white rounded-2xl shadow-md p-4 mb-1 habit-card transition-all duration-300 hover:shadow-lg animate-fadein"}>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="font-semibold text-lg text-blue-900">{habit.name}</div>
-              {habit.priority === 'high' && <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">High</span>}
-              {habit.priority === 'medium' && <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">Medium</span>}
-              {habit.priority === 'low' && <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Low</span>}
+        <div key={habit.id} className="habit-card">
+          <div className="habit-header">
+            <div className="habit-info">
+              <h3 className="habit-name">{habit.name}</h3>
+              {habit.description && <p className="habit-description">{habit.description}</p>}
+              {habit.category && <span className="habit-category">📂 {habit.category}</span>}
             </div>
-            {habit.description && <div className="text-xs text-gray-600 mb-1 truncate">{habit.description}</div>}
-            {habit.category && <div className="text-xs text-blue-600 mb-1">📂 {habit.category}</div>}
-            <div className="text-xs text-gray-400 mb-1">Created: {new Date(habit.createdAt).toLocaleDateString()}</div>
             
-            {/* Goal Progress */}
-            {habit.goal && (
-              <div className="mb-2">
-                <div className="flex justify-between text-xs text-gray-500 mb-1">
-                  <span>Weekly Goal: {habit.totalCompletions}/{habit.goal}</span>
-                  <span>{Math.round((habit.totalCompletions / habit.goal) * 100)}%</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
-                    className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${Math.min((habit.totalCompletions / habit.goal) * 100, 100)}%` }}
-                  ></div>
-                </div>
-              </div>
-            )}
-            
-            <div className="flex items-center gap-2 mt-1">
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-700 mr-1">
-                🔥 {habit.currentStreak} <span className="ml-1">Current</span>
-              </span>
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">
-                🏆 {habit.longestStreak} <span className="ml-1">Longest</span>
-              </span>
-            </div>
-            <div className="flex gap-1 mt-2">
-              {last7.map(date => (
-                <button
-                  key={date}
-                  className={`w-7 h-7 rounded-full border flex items-center justify-center text-xs font-bold transition-colors
-                    ${habit.completions[date] ? 'bg-green-400 border-green-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-400 hover:bg-blue-100 hover:border-blue-400'}`}
-                  onClick={() => onToggleDayComplete && onToggleDayComplete(habit.id, date)}
-                  aria-label={habit.completions[date] ? `Unmark ${date}` : `Mark ${date}`}
-                  title={date === today ? 'Today' : date}
-                >
-                  {date === today ? 'T' : new Date(date).getDate()}
-                </button>
-              ))}
+            <div className="habit-actions">
+              {/* Main completion button - most prominent */}
+              <button
+                className={`complete-btn ${habit.completions[today] ? 'completed' : ''}`}
+                onClick={() => onToggleComplete(habit.id)}
+                title={habit.completions[today] ? 'Mark as incomplete' : 'Mark as complete for today'}
+              >
+                {habit.completions[today] ? (
+                  <>
+                    <span className="check-icon">✓</span>
+                    <span className="btn-text">Done!</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="plus-icon">+</span>
+                    <span className="btn-text">Mark Done</span>
+                  </>
+                )}
+              </button>
+              
+              <button
+                className="delete-btn"
+                onClick={() => { if(window.confirm('Delete this habit?')) onDelete(habit.id); }}
+                title="Delete habit"
+              >
+                🗑
+              </button>
             </div>
           </div>
-          <button
-            className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-colors mx-2 text-lg font-bold ${habit.completions[today] ? 'bg-green-400 border-green-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-500 hover:bg-blue-100 hover:border-blue-400'}`}
-            onClick={() => onToggleComplete(habit.id)}
-            aria-label={habit.completions[today] ? 'Mark incomplete' : 'Mark complete'}
-          >
-            {habit.completions[today] ? '✓' : ''}
-          </button>
-          <button
-            className="text-gray-300 hover:text-red-500 text-xs px-2 py-1 rounded border border-transparent ml-2 transition-colors"
-            onClick={() => { if(window.confirm('Delete this habit?')) onDelete(habit.id); }}
-            aria-label="Delete habit"
-            title="Delete habit"
-          >
-            🗑
-          </button>
+
+          {/* Progress and stats */}
+          <div className="habit-progress">
+            <div className="progress-row">
+              <div className="streak-info">
+                <span className="streak current">🔥 {habit.currentStreak} day streak</span>
+                <span className="streak best">🏆 Best: {habit.longestStreak} days</span>
+              </div>
+              
+              {habit.goal && (
+                <div className="goal-progress">
+                  <span className="goal-text">This week: {habit.totalCompletions}/{habit.goal}</span>
+                  <div className="progress-bar">
+                    <div 
+                      className="progress-fill"
+                      style={{ width: `${Math.min((habit.totalCompletions / habit.goal) * 100, 100)}%` }}
+                    ></div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Weekly calendar - simplified and clearer */}
+            <div className="weekly-calendar">
+              <div className="calendar-header">This Week:</div>
+              <div className="calendar-days">
+                {last7.map((date, index) => {
+                  const isCompleted = habit.completions[date];
+                  const isToday = date === today;
+                  const dayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date(date).getDay()];
+                  
+                  return (
+                    <button
+                      key={date}
+                      className={`calendar-day ${isCompleted ? 'completed' : ''} ${isToday ? 'today' : ''}`}
+                      onClick={() => onToggleDayComplete && onToggleDayComplete(habit.id, date)}
+                      title={`${dayName} ${new Date(date).toLocaleDateString()} - ${isCompleted ? 'Completed' : 'Not completed'}`}
+                    >
+                      <span className="day-name">{dayName}</span>
+                      <span className="day-number">{new Date(date).getDate()}</span>
+                      {isCompleted && <span className="day-check">✓</span>}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
         </div>
       ))}
     </div>
