@@ -24,8 +24,9 @@ function App() {
   }, []);
 
   const handleDismissIntro = () => {
-    setShowIntro(false);
     localStorage.setItem('habitTrackerIntroDismissed', 'true');
+    setShowIntro(false);
+    console.log('Intro dismissed, main app should show now.');
   };
 
   if (loading) {
