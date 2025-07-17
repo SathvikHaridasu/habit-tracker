@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import './App.css';
-import { HabitForm } from '../../src/components/HabitForm';
-import { HabitList } from '../../src/components/HabitList';
-import { useHabits } from '../../src/hooks/useHabits';
-import type { Habit } from '../../src/types';
+import { HabitForm } from './components/HabitForm';
+import { HabitList } from './components/HabitList';
+import { useHabits } from './hooks/useHabits';
+import type { Habit } from './types';
 
 function getToday() {
   return new Date().toISOString().slice(0, 10);
@@ -15,38 +15,15 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [loading, setLoading] = useState(true);
   const [showIntro, setShowIntro] = useState(() => {
-    return localStorage.getItem('habitTrackerIntroDismissed') !== 'true';
+    const dismissed = localStorage.getItem('habitTrackerIntroDismissed') !== 'true';
+    console.log('Intro dismissed check:', dismissed);
+    return dismissed;
   });
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
   }, []);
-
-  const handleDismissIntro = () => {
-    localStorage.setItem('habitTrackerIntroDismissed', 'true');
-    setShowIntro(false);
-    console.log('Intro dismissed, main app should show now.');
-  };
-
-  if (loading) {
-    return (
-      <div className="loading-screen">
-        <div className="spinner"></div>
-        <div className="loading-title">Habit Tracker</div>
-      </div>
-    );
-  }
-
-  if (showIntro) {
-    return (
-      <div className="intro-screen">
-        <h1>Welcome to Habit Tracker!</h1>
-        <p>Track your daily habits, build streaks, and reach your goals with ease. Add habits, mark completions, and see your progress over time.</p>
-        <button className="intro-btn" onClick={handleDismissIntro}>Get Started</button>
-      </div>
-    );
-  }
 
   // Calculate statistics
   const stats = useMemo(() => {
@@ -73,6 +50,35 @@ function App() {
     const cats = habits.map(h => h.category).filter(Boolean) as string[];
     return ['all', ...Array.from(new Set(cats))];
   }, [habits]);
+
+  const handleDismissIntro = () => {
+    localStorage.setItem('habitTrackerIntroDismissed', 'true');
+    setShowIntro(false);
+    console.log('Intro dismissed, main app should show now.');
+  };
+
+  if (loading) {
+    console.log('Showing loading screen');
+    return (
+      <div className="loading-screen">
+        <div className="spinner"></div>
+        <div className="loading-title">Habit Tracker</div>
+      </div>
+    );
+  }
+
+  if (showIntro) {
+    console.log('Showing intro screen');
+    return (
+      <div className="intro-screen">
+        <h1>Welcome to Habit Tracker!</h1>
+        <p>Track your daily habits, build streaks, and reach your goals with ease. Add habits, mark completions, and see your progress over time.</p>
+        <button className="intro-btn" onClick={handleDismissIntro}>Get Started</button>
+      </div>
+    );
+  }
+
+  console.log('Showing main app');
 
   const handleAddHabit = (name: string, description: string, category?: string, goal?: number) => {
     if (habits.length >= 20) return;
