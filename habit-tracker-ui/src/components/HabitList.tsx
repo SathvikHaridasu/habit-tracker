@@ -1,4 +1,4 @@
-import React from 'react';
+
 import type { Habit } from '../types';
 
 interface HabitListProps {
@@ -103,7 +103,7 @@ export const HabitList: React.FC<HabitListProps> = ({ habits, onToggleComplete, 
             <div className="weekly-calendar">
               <div className="calendar-header">This Week:</div>
               <div className="calendar-days">
-                {last7.map((date, index) => {
+                {last7.map((date) => {
                   const isCompleted = habit.completions[date];
                   const isToday = date === today;
                   const dayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date(date).getDay()];

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 interface HabitFormProps {
   onAdd: (name: string, description: string, category?: string, goal?: number) => void;
